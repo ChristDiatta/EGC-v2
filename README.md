@@ -1,6 +1,6 @@
-# EGC Ingénierie — Site web (Flask)
+# EGC Ingénierie
 
-Reproduction fidèle du design « EGC Ingénierie » (thème sombre, glassmorphism, dégradés cyan/vert/or)
+EGC Ingénierie » (thème sombre, glassmorphism, dégradés cyan/vert/or)
 en projet Flask, avec une couche d'animations modernes.
 
 ## Démarrage
