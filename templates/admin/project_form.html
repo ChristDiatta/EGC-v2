@@ -1,0 +1,39 @@
+{% extends 'admin/base.html' %}
+{% from 'admin/_ui.html' import csrf, field, page_title with context %}
+{% block title %}{{ 'Modifier' if pid else 'Nouveau' }} projet{% endblock %}
+{% block content %}
+<a href="{{ url_for('admin.projects') }}" class="text-sm font-semibold text-cyan-700 hover:underline"><i class="fa-solid fa-arrow-left mr-1"></i>Réalisations</a>
+<div class="mt-3">{{ page_title("Modifier le projet" if pid else "Nouveau projet") }}</div>
+
+<form method="post" enctype="multipart/form-data" class="card p-6 space-y-5 max-w-2xl">
+    {{ csrf() }}
+    <label class="block"><span class="text-sm font-semibold text-slate-700">Domaine d'intervention <span class="text-red-500">*</span></span>
+        <select class="inp mt-1" name="domain">{% for slug, title in domains %}<option value="{{ slug }}" {{ 'selected' if slug == p.domain }}>{{ title }}</option>{% endfor %}</select></label>
+    {{ field('Nom du projet', 'title', p.title, true, maxlength=120, placeholder='Ex. Résidence Les Almadies') }}
+    <div class="grid sm:grid-cols-2 gap-5">
+        {{ field('Lieu', 'lieu', p.lieu, maxlength=80, placeholder='Ex. Dakar, Sénégal') }}
+        {{ field('Année', 'annee', p.annee, maxlength=20, placeholder='Ex. 2025') }}
+    </div>
+    <label class="block"><span class="text-sm font-semibold text-slate-700">Description courte <span class="text-slate-400 font-normal">(facultatif)</span></span>
+        <textarea class="inp mt-1" name="description" maxlength="400" placeholder="Lots étudiés, particularités du projet…">{{ p.description }}</textarea></label>
+
+    <div>
+        <span class="text-sm font-semibold text-slate-700">Photo</span>
+        {% if p.image %}
+        <div class="flex items-center gap-4 mt-2">
+            <img class="w-40 h-28 object-cover rounded-xl border border-slate-200" src="{{ url_for('static', filename='img/realisations/' ~ p.image) }}" alt="Photo actuelle">
+            <label class="text-sm flex items-center gap-2"><input type="checkbox" name="remove_image" value="1"> Retirer la photo</label>
+        </div>
+        {% endif %}
+        <input class="inp mt-2" type="file" name="image" accept="image/jpeg,image/png,image/webp">
+        <span class="block text-xs text-slate-500 mt-1">JPG, PNG ou WebP, 10 Mo maximum. L'image est redimensionnée automatiquement. Format conseillé : paysage (16/10).</span>
+    </div>
+
+    <label class="flex items-center gap-2 text-sm font-semibold"><input type="checkbox" name="visible" value="1" {{ 'checked' if p.visible }}> Afficher ce projet sur le site</label>
+
+    <div class="flex gap-3 pt-2">
+        <button class="btn btn-primary" type="submit"><i class="fa-solid fa-floppy-disk"></i> Enregistrer</button>
+        <a class="btn" href="{{ url_for('admin.projects') }}">Annuler</a>
+    </div>
+</form>
+{% endblock %}

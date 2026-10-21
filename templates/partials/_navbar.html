@@ -1,0 +1,57 @@
+<!-- Navigation Bar -->
+<header class="fixed top-0 left-0 right-0 z-50 glass-nav transition-all duration-300" id="navbar">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="nav-inner flex items-center justify-between h-20">
+
+            <!-- Logo -->
+            <a href="{{ url_for('index') }}" class="flex items-center gap-3 group" aria-label="{{ site.name }}">
+                <span class="logo-mark relative block w-14 h-14 shrink-0 rounded-full group-hover:scale-105 transition-transform logo-glow">
+                    <img src="{{ url_for('static', filename='img/logo-egc-128.png') }}" width="56" height="56" alt="Logo EGC Ingénierie - Énergie &amp; Génie Civil" decoding="async" fetchpriority="high" class="w-full h-full rounded-full">
+                </span>
+                <div class="flex flex-col">
+                    <span class="text-xl font-extrabold tracking-wider text-white">EGC <span class="text-cyan-400 font-normal">INGÉNIERIE</span></span>
+                    <span class="text-[10px] uppercase tracking-widest text-egc-muted">{{ site.tagline }}</span>
+                </div>
+            </a>
+
+            <!-- Desktop Navigation -->
+            <nav class="hidden md:flex items-center gap-8" aria-label="Navigation principale">
+                {% for item in nav %}
+                {% set on = active == item.endpoint or (item.endpoint == 'expertises' and active == 'expertise_detail') %}
+                <a href="{{ url_for(item.endpoint) }}" data-page="{{ item.endpoint }}"{% if on %} aria-current="page"{% endif %}
+                   class="nav-link text-sm font-medium {{ 'is-active text-white' if on else 'text-egc-muted' }} hover:text-cyan-400 transition-colors">{{ item.label }}</a>
+                {% endfor %}
+            </nav>
+
+            <!-- CTA Button -->
+            <div class="hidden md:flex items-center gap-3">
+                <button type="button" class="theme-toggle w-10 h-10 rounded-xl glass-card flex items-center justify-center text-egc-muted hover:text-cyan-400 transition-colors" aria-label="Basculer entre le mode clair et le mode sombre" aria-pressed="false" title="Mode clair / sombre"><i class="fa-solid fa-sun theme-icon-sun"></i><i class="fa-solid fa-moon theme-icon-moon"></i></button>
+                <a href="{{ url_for('devis') }}" class="btn-fx relative inline-flex items-center justify-center p-0.5 overflow-hidden text-sm font-semibold rounded-xl group bg-gradient-to-br from-cyan-500 to-green-500 group-hover:from-cyan-500 group-hover:to-green-500 hover:text-white text-white shadow-md hover:shadow-cyan-500/20 transition-all">
+                    <span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-egc-dark rounded-[10px] group-hover:bg-opacity-0">
+                        Demander un devis
+                        <i class="fa-solid fa-arrow-right ml-2 text-xs transition-transform group-hover:translate-x-1"></i>
+                    </span>
+                </a>
+            </div>
+
+            <!-- Mobile menu button -->
+            <div class="md:hidden flex items-center gap-2">
+                <button type="button" class="theme-toggle w-10 h-10 rounded-xl glass-card flex items-center justify-center text-egc-muted hover:text-cyan-400 transition-colors" aria-label="Basculer entre le mode clair et le mode sombre" aria-pressed="false" title="Mode clair / sombre"><i class="fa-solid fa-sun theme-icon-sun"></i><i class="fa-solid fa-moon theme-icon-moon"></i></button>
+            <button id="mobile-menu-btn" type="button" class="text-egc-muted hover:text-white p-2 rounded-lg" aria-label="Menu Mobile" aria-expanded="false" aria-controls="mobile-menu">
+                <i class="fa-solid fa-bars text-2xl"></i>
+            </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Menu Dropdown -->
+    <div id="mobile-menu" class="mobile-panel md:hidden glass-card border-b border-white/10">
+        <div class="px-4 pt-2 pb-6 space-y-3">
+            {% for item in nav_mobile %}
+            {% set on = active == item.endpoint or (item.endpoint == 'expertises' and active == 'expertise_detail') %}
+            <a href="{{ url_for(item.endpoint) }}" class="mobile-link block px-3 py-2 rounded-md text-base font-medium {{ 'text-white' if on else 'text-egc-muted hover:text-white' }} hover:bg-cyan-500/10">{{ item.label }}</a>
+            {% endfor %}
+            <a href="{{ url_for('devis') }}" class="mobile-link block w-full text-center mt-4 px-4 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-green-500 font-semibold text-white">Demander un devis</a>
+        </div>
+    </div>
+</header>

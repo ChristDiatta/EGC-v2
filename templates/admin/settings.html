@@ -1,0 +1,40 @@
+{% extends 'admin/base.html' %}
+{% from 'admin/_ui.html' import csrf, field, page_title with context %}
+{% block title %}Paramètres du site{% endblock %}
+{% block content %}
+{{ page_title("Paramètres du site", "Coordonnées et chiffres clés affichés sur le site.") }}
+
+<form method="post" class="space-y-6 max-w-3xl">
+    {{ csrf() }}
+    <section class="card p-6 space-y-5">
+        <h2 class="font-bold"><i class="fa-solid fa-address-book text-cyan-600 mr-2"></i>Coordonnées</h2>
+        <p class="text-xs text-slate-500 -mt-3">Utilisées dans le pied de page, la page Contact, la page Devis et les boutons d'appel.</p>
+        <div class="grid sm:grid-cols-2 gap-5">
+            {{ field('Téléphone', 'phone', site.phone, true, maxlength=40, placeholder='+221 77 000 00 00') }}
+            {{ field('E-mail', 'email', site.email, true, 'email', maxlength=120) }}
+        </div>
+        {{ field('Adresse du siège', 'address', site.address, true, maxlength=200) }}
+        <div class="grid sm:grid-cols-2 gap-5">
+            {{ field('Adresse courte', 'address_short', site.address_short, false, maxlength=120, help='Version abrégée pour le pied de page.') }}
+            {{ field('Site web', 'website', site.website, true, maxlength=120, placeholder='www.exemple.sn') }}
+        </div>
+        <p class="text-xs text-slate-500"><i class="fa-solid fa-circle-info mr-1"></i>Les e-mails de notification des devis utilisent l'adresse <code>MAIL_TO</code> du fichier <code>.env</code>.</p>
+    </section>
+
+    <section class="card p-6 space-y-5">
+        <h2 class="font-bold"><i class="fa-solid fa-chart-simple text-green-600 mr-2"></i>Chiffres clés</h2>
+        <p class="text-xs text-slate-500 -mt-3">Les 4 compteurs de l'accueil et de la page « EGC ». Les couleurs ne changent pas.</p>
+        {% for s in stats %}
+        {% set i = loop.index0 %}
+        <div class="grid grid-cols-12 gap-3 items-end p-3 rounded-xl bg-slate-50">
+            <div class="col-span-5 sm:col-span-2">{{ field('Valeur', 'stat_value_' ~ i, s.value, true, 'number', maxlength=6) }}</div>
+            <div class="col-span-3 sm:col-span-2">{{ field('Suffixe', 'stat_suffix_' ~ i, s.suffix, false, maxlength=4, placeholder='%, +') }}</div>
+            <div class="col-span-12 sm:col-span-4">{{ field('Libellé', 'stat_label_' ~ i, s.label, true, maxlength=40) }}</div>
+            <div class="col-span-12 sm:col-span-4">{{ field('Sous-titre', 'stat_sub_' ~ i, s.sub, false, maxlength=60) }}</div>
+        </div>
+        {% endfor %}
+    </section>
+
+    <button class="btn btn-primary" type="submit"><i class="fa-solid fa-floppy-disk"></i> Enregistrer les paramètres</button>
+</form>
+{% endblock %}

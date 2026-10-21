@@ -1,0 +1,37 @@
+{% extends 'admin/base.html' %}
+{% from 'admin/_ui.html' import page_title, post_btn, move_btns with context %}
+{% block title %}Réalisations{% endblock %}
+{% block content %}
+{{ page_title("Réalisations", "Projets affichés sur la page Réalisations, dans chaque domaine d'intervention.") }}
+
+<div class="space-y-6">
+{% for slug, title in domains %}
+    <section class="card overflow-hidden">
+        <header class="flex flex-wrap items-center justify-between gap-3 px-5 py-4 bg-slate-50 border-b border-slate-200">
+            <h2 class="font-bold">{{ title }} <span class="text-xs font-semibold text-slate-400 ml-1">{{ grouped[slug]|length }} projet{{ 's' if grouped[slug]|length > 1 }}</span></h2>
+            <a class="btn btn-primary" href="{{ url_for('admin.project_new', domaine=slug) }}"><i class="fa-solid fa-plus"></i> Ajouter un projet</a>
+        </header>
+        {% if grouped[slug] %}
+        <ul class="divide-y divide-slate-100">
+            {% for p in grouped[slug] %}
+            <li class="flex flex-wrap items-center gap-4 px-5 py-3 {{ 'opacity-60' if not p.visible }}">
+                <img class="w-24 h-16 object-cover rounded-lg border border-slate-200 bg-slate-100"
+                     src="{{ url_for('static', filename='img/realisations/' ~ (p.image or 'placeholder.svg')) }}" alt="" loading="lazy">
+                <div class="flex-1 min-w-[10rem]">
+                    <p class="font-semibold">{{ p.title }}{% if not p.visible %} <span class="ml-1 px-2 py-0.5 rounded-full bg-slate-200 text-slate-600 text-[10px] font-bold">Masqué</span>{% endif %}</p>
+                    <p class="text-xs text-slate-500">{{ [p.lieu, p.annee]|select|join(' · ') or 'Lieu et année non renseignés' }}{% if not p.image %} · <span class="text-amber-700 font-semibold">Pas de photo</span>{% endif %}</p>
+                </div>
+                <div class="flex flex-wrap gap-1.5">
+                    {{ move_btns(url_for('admin.project_move', pid=p.id)) }}
+                    {{ post_btn(url_for('admin.project_toggle', pid=p.id), '', 'fa-eye-slash' if p.visible else 'fa-eye', title='Masquer' if p.visible else 'Afficher') }}
+                    <a class="btn" href="{{ url_for('admin.project_edit', pid=p.id) }}"><i class="fa-solid fa-pen"></i> Modifier</a>
+                    {{ post_btn(url_for('admin.project_delete', pid=p.id), '', 'fa-trash', 'btn-danger', 'Supprimer ce projet ?', title='Supprimer') }}
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}<p class="px-5 py-6 text-sm text-slate-500">Aucun projet dans ce domaine pour le moment.</p>{% endif %}
+    </section>
+{% endfor %}
+</div>
+{% endblock %}

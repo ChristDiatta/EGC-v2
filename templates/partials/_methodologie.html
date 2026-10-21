@@ -1,0 +1,42 @@
+{% from '_macros.html' import section_head %}
+<!-- Notre Démarche / Méthodologie Section -->
+<section id="methodologie" class="py-20 relative bg-cyan-500/20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        {{ section_head("Notre Démarche Projet", "De l'Idée à la Réception",
+            "Un accompagnement rigoureux sur les 6 phases majeures de votre projet avec des livrables clairs à chaque étape.") }}
+
+        <!-- Timeline 6 Steps -->
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 relative">
+            {% for s in steps %}
+            {% set green = s.phase > 3 %}
+            <div class="glass-card glass-card-hover p-6 rounded-2xl relative step-card" data-reveal data-delay="{{ (loop.index0 % 3) * 120 }}">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="step-num text-3xl font-black {{ 'text-green-400' if green else 'text-cyan-400' }}">{{ s.n }}</span>
+                    <span class="px-2.5 py-1 rounded {{ 'bg-green-500/10 text-green-300' if green else 'bg-cyan-500/10 text-cyan-300' }} text-[10px] font-bold uppercase">Phase {{ s.phase }}</span>
+                </div>
+                <h3 class="text-lg font-bold text-white mb-2">{{ s.title }}</h3>
+                <p class="text-xs text-egc-muted leading-relaxed">{{ s.text }}</p>
+                <span class="step-line {{ 'bg-green-400' if green else 'bg-cyan-400' }}"></span>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Software Tools & Norms Interactive Badges -->
+        <div class="mt-16 glass-card p-8 rounded-2xl" data-reveal>
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                <div>
+                    <h4 class="text-lg font-bold text-white mb-1">Nos Outils de Conception &amp; Référentiels</h4>
+                    <p class="text-xs text-egc-muted">Logiciels de pointe &amp; application stricte des normes sénégalaises et européennes (dont NF C 15-100).</p>
+                </div>
+
+                <div class="flex flex-wrap gap-2 justify-center md:justify-end">
+                    {% for t in tools %}
+                    <span class="tool-chip px-3 py-1.5 rounded-lg bg-white/10 text-cyan-300 font-semibold text-xs border border-white/10" data-reveal="zoom" data-delay="{{ 150 + loop.index0 * 70 }}">{{ t }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>

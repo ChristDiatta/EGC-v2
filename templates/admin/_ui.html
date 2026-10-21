@@ -1,0 +1,29 @@
+{# Petits composants partagés (importer avec : from 'admin/_ui.html' import ... with context) #}
+{% macro csrf() %}<input type="hidden" name="_csrf" value="{{ csrf_token }}">{% endmacro %}
+
+{% macro field(label, name, value='', required=false, type='text', help='', maxlength=200, placeholder='') %}
+<label class="block">
+    <span class="text-sm font-semibold text-slate-700">{{ label }}{% if required %} <span class="text-red-500">*</span>{% endif %}</span>
+    <input class="inp mt-1" type="{{ type }}" name="{{ name }}" value="{{ value if value is not none else '' }}" maxlength="{{ maxlength }}"
+           placeholder="{{ placeholder }}" {{ 'required' if required }}>
+    {% if help %}<span class="block text-xs text-slate-500 mt-1">{{ help }}</span>{% endif %}
+</label>
+{% endmacro %}
+
+{# Bouton qui envoie un POST (supprimer, monter, descendre...) #}
+{% macro post_btn(action, label, icon, cls='', confirm='', fields={}, title='') %}
+<form method="post" action="{{ action }}" class="inline"{% if confirm %} onsubmit="return confirm('{{ confirm }}')"{% endif %}>
+    {{ csrf() }}
+    {% for k, v in fields.items() %}<input type="hidden" name="{{ k }}" value="{{ v }}">{% endfor %}
+    <button type="submit" class="btn {{ cls }}" title="{{ title or label }}" aria-label="{{ title or label }}"><i class="fa-solid {{ icon }}"></i>{% if label %} {{ label }}{% endif %}</button>
+</form>
+{% endmacro %}
+
+{% macro move_btns(base_url) %}
+{{ post_btn(base_url, '', 'fa-arrow-up', fields={'dir': 'up'}, title='Monter') }}
+{{ post_btn(base_url, '', 'fa-arrow-down', fields={'dir': 'down'}, title='Descendre') }}
+{% endmacro %}
+
+{% macro page_title(title, sub='') %}
+<div class="mb-6"><h1 class="text-2xl font-extrabold text-slate-900">{{ title }}</h1>{% if sub %}<p class="text-sm text-slate-500 mt-1">{{ sub }}</p>{% endif %}</div>
+{% endmacro %}

@@ -1,0 +1,24 @@
+{% extends 'admin/base.html' %}
+{% block title %}Connexion{% endblock %}
+{% block bare %}
+<div class="text-center mb-6">
+    <img src="{{ url_for('static', filename='img/logo-egc-192.png') }}" width="88" height="88" alt="Logo EGC Ingénierie" class="inline-block rounded-full shadow-lg" style="width:88px;height:88px">
+    <h1 class="text-2xl font-extrabold mt-4">{{ site.name }}</h1>
+    <p class="text-sm text-slate-500">Espace d'administration</p>
+</div>
+<form method="post" class="card p-6 space-y-4" autocomplete="on">
+    <input type="hidden" name="_csrf" value="{{ csrf_token }}">
+    {% if not has_admin %}
+    <div class="text-xs bg-amber-50 border border-amber-200 text-amber-900 rounded-lg p-3 leading-relaxed">
+        Aucun administrateur n'existe encore. Créez-en un avec la commande :<br>
+        <code class="font-mono font-bold">flask --app app create-admin</code>
+    </div>
+    {% endif %}
+    <label class="block"><span class="text-sm font-semibold text-slate-700">Identifiant</span>
+        <input class="inp mt-1" name="username" autocomplete="username" required autofocus></label>
+    <label class="block"><span class="text-sm font-semibold text-slate-700">Mot de passe</span>
+        <input class="inp mt-1" type="password" name="password" autocomplete="current-password" required></label>
+    <button class="btn btn-primary w-full justify-center py-2.5" type="submit"><i class="fa-solid fa-right-to-bracket"></i> Se connecter</button>
+</form>
+<p class="text-center mt-4"><a href="{{ url_for('index') }}" class="text-xs text-slate-500 hover:text-cyan-700"><i class="fa-solid fa-arrow-left mr-1"></i>Retour au site</a></p>
+{% endblock %}

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ site.title }}{% endblock %}</title>
+    <meta name="description" content="{{ site.description }}">
+    <meta name="theme-color" content="#070c1a">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <meta property="og:title" content="{{ site.title }}">
+    <meta property="og:description" content="{{ site.description }}">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="{{ site.name }}">
+    <meta property="og:image" content="{{ url_for('static', filename='img/og-image.jpg', _external=True) }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}" sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='img/favicon-32.png') }}">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='img/apple-touch-icon.png') }}">
+
+    <!-- Active les états "avant animation" uniquement si JS est disponible -->
+    <script>document.documentElement.classList.add('js');</script>
+    <!-- Thème : choix mémorisé (sombre par défaut), appliqué avant l'affichage pour éviter le flash -->
+    <script>
+        (function () {
+            try { if (localStorage.getItem('egc-theme') === 'light') document.documentElement.classList.add('light'); } catch (e) {}
+        })();
+    </script>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        egc: {
+                            navy: '#0b1329',
+                            dark: '#070c1a',
+                            card: '#111b36',
+                            cyan: '#00d2ff',
+                            electric: '#0072ff',
+                            green: '#10b981',
+                            lightgreen: '#22c55e',
+                            gold: '#f59e0b',
+                            text: '#e2e8f0',
+                            muted: '#94a3b8'
+                        }
+                    },
+                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'drift': 'drift 18s ease-in-out infinite',
+                        'drift-rev': 'drift 22s ease-in-out infinite reverse',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        drift: {
+                            '0%, 100%': { transform: 'translate(0,0) scale(1)' },
+                            '33%': { transform: 'translate(30px,-20px) scale(1.08)' },
+                            '66%': { transform: 'translate(-25px,15px) scale(.95)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="antialiased selection:bg-cyan-500 selection:text-white">
+
+    <!-- Écran de chargement -->
+    <div id="loader" aria-hidden="true">
+        <div class="loader-logo">
+            <img src="{{ url_for('static', filename='img/logo-egc-192.png') }}" width="96" height="96" alt="" decoding="async" fetchpriority="high">
+        </div>
+        <div class="loader-bar"><span></span></div>
+    </div>
+    <noscript><style>#loader{display:none!important}</style></noscript>
+
+    <!-- Barre de progression de lecture -->
+    <div id="scroll-progress" aria-hidden="true"></div>
+
+    {% include 'partials/_navbar.html' %}
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    {% include 'partials/_footer.html' %}
+
+    <!-- Toast -->
+    <div id="toast" role="status" aria-live="polite"></div>
+
+    <!-- Retour en haut -->
+    <button id="back-to-top" type="button" aria-label="Retour en haut">
+        <i class="fa-solid fa-arrow-up"></i>
+    </button>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

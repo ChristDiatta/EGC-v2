@@ -1,0 +1,83 @@
+{% from '_macros.html' import section_head %}
+{# Un "set" de logos ; répété pour remplir la largeur. Le 2e set (hidden) assure la boucle sans couture. #}
+{% macro logo_set(items, reps, hidden=false) %}
+<ul class="marquee-set"{% if hidden %} aria-hidden="true"{% endif %}>
+    {% for r in range(reps) %}{% for p in items %}
+    <li class="partner-tile{{ ' is-clone' if r > 0 }}" title="{{ p.name }}">
+        {% if p.url %}<a href="{{ p.url }}" target="_blank" rel="noopener noreferrer" aria-label="{{ p.name }}"{% if hidden or r > 0 %} tabindex="-1"{% endif %}>{% endif %}
+            <img src="{{ url_for('static', filename=p.file) }}" alt="{{ '' if (hidden or r > 0) else 'Logo ' ~ p.name }}" height="48" loading="lazy" decoding="async" draggable="false">
+        {% if p.url %}</a>{% endif %}
+    </li>
+    {% endfor %}{% endfor %}
+</ul>
+{% endmacro %}
+
+{% set n = partners|length %}
+{% set reps = ((9 / n)|round(0, 'ceil'))|int if n else 0 %}
+{% set c = {
+    'cyan': 'bg-cyan-500/10 border-cyan-500/30 text-cyan-400',
+    'green': 'bg-green-500/10 border-green-500/30 text-green-400',
+    'amber': 'bg-amber-500/10 border-amber-500/30 text-amber-400'} %}
+
+<!-- Partenaires -->
+<section id="partenaires" class="partners-section py-20 relative bg-cyan-500/20 overflow-hidden">
+    <div class="absolute top-0 left-1/4 w-[480px] h-[480px] bg-gradient-to-tr from-cyan-600/15 to-green-500/10 rounded-full blur-[120px] pointer-events-none animate-drift" aria-hidden="true"></div>
+    <div class="absolute bottom-0 right-0 w-72 h-72 bg-blue-600/10 rounded-full blur-[90px] pointer-events-none animate-drift-rev" aria-hidden="true"></div>
+
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {{ section_head(partners_section.kicker, partners_section.title, partners_section.sub) }}
+    </div>
+
+    {% if n %}
+    <!-- Bandeaux de logos défilants -->
+    <div class="relative" data-reveal>
+        <div class="marquee" role="region" aria-label="Logos de nos partenaires" style="--dur: {{ [reps * n * 5, 30]|max }}s">
+            <div class="marquee-track">
+                {{ logo_set(partners, reps) }}
+                {{ logo_set(partners, reps, true) }}
+            </div>
+        </div>
+        {% if n >= 4 %}
+        <div class="marquee is-reverse" aria-hidden="true" style="--dur: {{ [reps * n * 6, 36]|max }}s">
+            <div class="marquee-track">
+                {{ logo_set(partners[::-1], reps, true) }}
+                {{ logo_set(partners[::-1], reps, true) }}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Points de confiance -->
+        <div class="grid md:grid-cols-3 gap-6 mt-16">
+            {% for pt in partner_points %}
+            <div class="glass-card glass-card-hover p-6 rounded-2xl flex items-start gap-4" data-reveal data-delay="{{ loop.index0 * 120 }}">
+                <div class="icon-tile w-12 h-12 rounded-xl {{ c[pt.c] }} border flex items-center justify-center text-lg shrink-0">
+                    <i class="fa-solid {{ pt.icon }}"></i>
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold text-white mb-1">{{ pt.title }}</h3>
+                    <p class="text-xs text-egc-muted leading-relaxed">{{ pt.text }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Appel à collaboration -->
+        <div class="cta-box glass-card rounded-3xl mt-10 p-8 sm:p-10 bg-gradient-to-br from-cyan-950/40 via-egc-card to-green-950/40 border border-cyan-500/30 flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left" data-reveal="zoom">
+            <div>
+                <h3 class="text-xl sm:text-2xl font-extrabold text-white mb-1">Vous souhaitez collaborer avec EGC ?</h3>
+                <p class="text-sm text-egc-muted">Rejoignez nos partenaires et construisons ensemble vos prochains projets.</p>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-3 shrink-0">
+                <a href="{{ url_for('contact') }}" class="btn-fx magnetic px-7 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-green-500 text-white font-bold text-sm shadow-lg hover:brightness-110 transition-all">
+                    <i class="fa-solid fa-handshake mr-2"></i> Devenir partenaire
+                </a>
+                <a href="{{ url_for('devis') }}" class="btn-fx px-7 py-3.5 rounded-xl glass-card hover:bg-white/10 text-white font-semibold text-sm border border-white/15 transition-all">
+                    <i class="fa-solid fa-file-signature mr-2 text-cyan-400"></i> Demander un devis
+                </a>
+            </div>
+        </div>
+    </div>
+</section>

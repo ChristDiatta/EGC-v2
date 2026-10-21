@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 80" width="240" height="80" role="img" aria-label="Logo exemple 03">
+  <path d="M28 18 44 28v20L28 58 12 48V28z" fill="#0072ff"/><path d="M28 30v16M20 34l8 4 8-4" stroke="#fff" stroke-width="3" fill="none"/>
+  <text x="62" y="39" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="800" letter-spacing="1.5" fill="#1e293b">PARTENAIRE</text>
+  <text x="62" y="58" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="600" letter-spacing="3" fill="#0072ff">LOGO 03</text>
+</svg>

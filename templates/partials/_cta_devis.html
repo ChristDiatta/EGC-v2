@@ -1,0 +1,18 @@
+{# Bandeau "Demander un devis" — variables optionnelles : cta_title, cta_text, cta_lot #}
+<section class="py-20 relative">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="cta-box glass-card rounded-3xl p-8 sm:p-12 bg-gradient-to-br from-cyan-950/40 via-egc-card to-green-950/40 border border-cyan-500/30 text-center" data-reveal="zoom">
+            <span class="px-3 py-1 rounded-full bg-amber-500/20 text-amber-400 text-[11px] font-bold">Réponse sous 24 h</span>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-5 mb-3">{{ cta_title|default("Un projet en tête ? Parlons-en.") }}</h2>
+            <p class="text-sm text-egc-muted max-w-2xl mx-auto leading-relaxed">{{ cta_text|default("Décrivez-nous votre projet : nos ingénieurs vous répondent avec une proposition chiffrée et adaptée à votre besoin.") }}</p>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8">
+                <a href="{{ url_for('devis', lot=cta_lot) if cta_lot else url_for('devis') }}" class="btn-fx magnetic w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-cyan-500 to-green-500 text-white font-bold shadow-lg hover:brightness-110 transition-all">
+                    <i class="fa-solid fa-file-signature mr-2"></i> Demander un devis
+                </a>
+                <a href="{{ site.phone_href }}" class="btn-fx w-full sm:w-auto px-8 py-4 rounded-xl glass-card border border-white/15 text-white font-semibold hover:bg-white/10 transition-all">
+                    <i class="fa-solid fa-phone mr-2 text-cyan-400"></i> {{ site.phone }}
+                </a>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,18 @@
+{% extends 'admin/base.html' %}
+{% from 'admin/_ui.html' import csrf, page_title with context %}
+{% block title %}Mon compte{% endblock %}
+{% block content %}
+{{ page_title("Mon compte", "Connecté en tant que " ~ session.get('admin_name') ~ ".") }}
+<form method="post" class="card p-6 space-y-4 max-w-md">
+    {{ csrf() }}
+    <h2 class="font-bold"><i class="fa-solid fa-key text-cyan-600 mr-2"></i>Changer le mot de passe</h2>
+    <label class="block"><span class="text-sm font-semibold text-slate-700">Mot de passe actuel</span>
+        <input class="inp mt-1" type="password" name="current" autocomplete="current-password" required></label>
+    <label class="block"><span class="text-sm font-semibold text-slate-700">Nouveau mot de passe</span>
+        <input class="inp mt-1" type="password" name="new" autocomplete="new-password" minlength="10" required>
+        <span class="text-xs text-slate-500">10 caractères minimum.</span></label>
+    <label class="block"><span class="text-sm font-semibold text-slate-700">Confirmer</span>
+        <input class="inp mt-1" type="password" name="confirm" autocomplete="new-password" minlength="10" required></label>
+    <button class="btn btn-primary" type="submit"><i class="fa-solid fa-floppy-disk"></i> Modifier</button>
+</form>
+{% endblock %}

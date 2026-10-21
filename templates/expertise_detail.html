@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import page_header, section_head, faq_list %}
+{% block title %}{{ e.title }} - {{ site.name }}{% endblock %}
+{% block content %}
+{{ page_header(e.title, e.title, d.intro, crumbs=[("Expertises", url_for('expertises'))]) }}
+
+<section class="py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-12 gap-10">
+        <div class="lg:col-span-8">
+            <h2 class="text-2xl font-extrabold text-white mb-6" data-reveal>Nos prestations</h2>
+            <div class="grid sm:grid-cols-2 gap-5">
+                {% for t, txt in d.prestations %}
+                <div class="glass-card glass-card-hover p-5 rounded-2xl border-t-2 {{ e.top }}" data-reveal data-delay="{{ (loop.index0 % 2) * 100 }}">
+                    <h3 class="text-white font-bold mb-2"><i class="fa-solid fa-circle-check {{ e.text }} mr-2"></i>{{ t }}</h3>
+                    <p class="text-xs text-egc-muted leading-relaxed">{{ txt }}</p>
+                </div>
+                {% endfor %}
+            </div>
+
+            <h2 class="text-2xl font-extrabold text-white mt-12 mb-6" data-reveal>Détail du périmètre</h2>
+            <ul class="grid sm:grid-cols-2 gap-3 text-sm text-egc-muted" data-reveal>
+                {% for it in e['items'] %}<li class="flex items-start gap-2"><i class="fa-solid fa-check {{ e.text }} mt-1"></i> {{ it }}</li>{% endfor %}
+            </ul>
+
+            <h2 class="text-2xl font-extrabold text-white mt-12 mb-6" data-reveal>Livrables</h2>
+            <div class="glass-card p-6 rounded-2xl" data-reveal>
+                <ul class="space-y-3 text-sm text-egc-muted">
+                    {% for l in d.livrables %}<li class="flex items-center gap-3"><i class="fa-solid fa-file-lines {{ e.text }}"></i> {{ l }}</li>{% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <aside class="lg:col-span-4 space-y-6">
+            <div class="glass-card p-6 rounded-2xl lg:sticky lg:top-28" data-reveal="right">
+                <div class="icon-tile w-14 h-14 rounded-2xl {{ e.box }} border flex items-center justify-center text-2xl mb-4"><i class="fa-solid {{ e.icon }}"></i></div>
+                <h3 class="text-white font-bold mb-1">{{ e.subtitle }}</h3>
+                <p class="text-[11px] text-egc-muted italic mb-5">{{ e.footer }}</p>
+                <h4 class="text-xs uppercase tracking-widest font-bold {{ e.text }} mb-3">Référentiels</h4>
+                <ul class="space-y-2 text-xs text-egc-muted mb-6">
+                    {% for n in d.normes %}<li><i class="fa-solid fa-shield-halved {{ e.text }} mr-2"></i>{{ n }}</li>{% endfor %}
+                </ul>
+                <a href="{{ url_for('devis', lot=e.lot) }}" class="btn-fx w-full py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-green-500 text-white font-bold text-sm text-center flex items-center justify-center gap-2 hover:brightness-110 transition-all">
+                    <i class="fa-solid fa-file-signature"></i> Demander un devis
+                </a>
+                <a href="{{ site.phone_href }}" class="block text-center text-xs text-egc-muted hover:text-cyan-400 mt-4 transition-colors"><i class="fa-solid fa-phone mr-1"></i> {{ site.phone }}</a>
+            </div>
+        </aside>
+    </div>
+</section>
+
+<section class="py-12 bg-egc-dark/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {{ section_head("Questions fréquentes", e.title) }}
+        {{ faq_list(d.faq) }}
+    </div>
+</section>
+
+<section class="py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-center text-lg font-bold text-white mb-6" data-reveal>Nos autres expertises</h2>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {% for o in others %}
+            <a href="{{ url_for('expertise_detail', slug=o.slug) }}" class="client-card glass-card p-4 rounded-xl text-center hover:border-cyan-500/30" data-reveal="zoom" data-delay="{{ loop.index0 * 80 }}">
+                <i class="fa-solid {{ o.icon }} {{ o.text }} text-2xl mb-2"></i>
+                <p class="text-sm font-semibold text-white">{{ o.title }}</p>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+{% set cta_lot = e.lot %}
+{% set cta_title = "Parlons de votre projet : " ~ e.title %}
+{% include 'partials/_cta_devis.html' %}
+{% endblock %}

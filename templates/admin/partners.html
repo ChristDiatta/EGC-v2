@@ -1,0 +1,46 @@
+{% extends 'admin/base.html' %}
+{% from 'admin/_ui.html' import csrf, field, page_title, post_btn, move_btns with context %}
+{% block title %}Partenaires{% endblock %}
+{% block content %}
+{{ page_title("Partenaires", "Logos affichés dans le bandeau défilant de la page d'accueil.") }}
+
+<form method="post" action="{{ url_for('admin.partner_add') }}" enctype="multipart/form-data" class="card p-5 mb-6">
+    {{ csrf() }}
+    <h2 class="font-bold mb-4"><i class="fa-solid fa-plus text-cyan-600 mr-2"></i>Ajouter un partenaire</h2>
+    <div class="grid md:grid-cols-3 gap-4 items-end">
+        {{ field('Nom', 'name', '', true, maxlength=80) }}
+        {{ field('Site web (facultatif)', 'url', '', false, 'text', maxlength=300, placeholder='www.exemple.sn') }}
+        <label class="block"><span class="text-sm font-semibold text-slate-700">Logo <span class="text-red-500">*</span></span>
+            <input class="inp mt-1" type="file" name="logo" accept="image/jpeg,image/png,image/webp" required></label>
+    </div>
+    <p class="text-xs text-slate-500 mt-3">JPG, PNG ou WebP (PNG à fond transparent conseillé). Le logo est redimensionné automatiquement.</p>
+    <button class="btn btn-primary mt-4" type="submit"><i class="fa-solid fa-plus"></i> Ajouter</button>
+</form>
+
+<div class="card divide-y divide-slate-100">
+    {% for r in rows %}
+    <div class="p-4 flex flex-wrap items-start gap-4 {{ 'opacity-60' if not r.visible }}">
+        <div class="w-28 h-16 rounded-lg border border-slate-200 bg-white flex items-center justify-center p-2 shrink-0">
+            <img class="max-w-full max-h-full object-contain" src="{{ url_for('static', filename='img/partners/' ~ r.logo) }}" alt="Logo {{ r.name }}" loading="lazy">
+        </div>
+        <form method="post" action="{{ url_for('admin.partner_save', pid=r.id) }}" enctype="multipart/form-data" class="flex-1 min-w-[16rem] grid sm:grid-cols-2 gap-3">
+            {{ csrf() }}
+            {{ field('Nom', 'name', r.name, true, maxlength=80) }}
+            {{ field('Site web', 'url', r.url, false, 'text', maxlength=300) }}
+            <label class="block"><span class="text-sm font-semibold text-slate-700">Remplacer le logo</span>
+                <input class="inp mt-1" type="file" name="logo" accept="image/jpeg,image/png,image/webp"></label>
+            <div class="flex items-end justify-between gap-3">
+                <label class="flex items-center gap-2 text-sm font-semibold pb-2"><input type="checkbox" name="visible" value="1" {{ 'checked' if r.visible }}> Visible</label>
+                <button class="btn btn-primary" type="submit"><i class="fa-solid fa-floppy-disk"></i> Enregistrer</button>
+            </div>
+        </form>
+        <div class="flex gap-1.5">
+            {{ move_btns(url_for('admin.partner_move', pid=r.id)) }}
+            {{ post_btn(url_for('admin.partner_delete', pid=r.id), '', 'fa-trash', 'btn-danger', 'Supprimer ce partenaire ?', title='Supprimer') }}
+        </div>
+    </div>
+    {% else %}
+    <p class="p-8 text-center text-sm text-slate-500">Aucun partenaire. Le bandeau de logos est masqué tant que la liste est vide.</p>
+    {% endfor %}
+</div>
+{% endblock %}

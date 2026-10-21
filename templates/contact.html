@@ -1,0 +1,33 @@
+{% extends 'base.html' %} 
+{% from '_macros.html' import page_header, section_head, faq_list %}
+{% block title %}Contact - {{ site.name }}{% endblock %}
+{% block content %}
+{{ page_header("Contact", "Parlons de votre projet",
+    "Une question, un plan à nous soumettre, un besoin d'étude ? Notre bureau d'études vous répond rapidement.") }}
+
+{% include 'partials/_contact.html' %}
+
+<section class="py-16">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-6">
+        <div class="glass-card p-6 rounded-2xl" data-reveal="left">
+            <h2 class="text-lg font-bold text-white mb-4"><i class="fa-solid fa-clock text-cyan-400 mr-2"></i>Horaires du bureau</h2>
+            <ul class="space-y-3 text-sm">
+                {% for d, h in hours %}<li class="flex justify-between border-b border-white/5 pb-2"><span class="text-egc-muted">{{ d }}</span><span class="text-white font-semibold">{{ h }}</span></li>{% endfor %}
+            </ul>
+        </div>
+        <div class="glass-card p-6 rounded-2xl" data-reveal="right">
+            <h2 class="text-lg font-bold text-white mb-4"><i class="fa-solid fa-map-location-dot text-green-400 mr-2"></i>Zone d'intervention</h2>
+            <p class="text-sm text-egc-muted leading-relaxed">Toutes les régions du Sénégal, ainsi que le Maroc. Nous nous déplaçons sur site pour les relevés, audits et visites de chantier.</p>
+            <a href="{{ url_for('devis') }}" class="btn-fx mt-5 inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-green-500 text-white text-sm font-bold hover:brightness-110 transition-all"><i class="fa-solid fa-file-signature"></i> Demander un devis</a>
+        </div>
+    </div>
+</section>
+
+<section class="py-16 bg-egc-dark/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {{ section_head("FAQ", "Questions fréquentes") }}
+        {{ faq_list(faq) }}
+    </div>
+</section>
+
+{% endblock %}

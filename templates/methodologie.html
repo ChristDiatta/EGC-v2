@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import page_header, section_head %}
+{% block title %}Notre méthode - {{ site.name }}{% endblock %}
+{% block content %}
+{{ page_header("Notre méthode", "De l'idée à la réception, en six phases",
+    "Un accompagnement structuré avec des livrables clairs et une validation à chaque étape.") }}
+
+<section class="py-12">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+        {% for s in steps %}
+        {% set green = s.phase > 3 %}
+        {% set d = details[s.phase] %}
+        <article class="step-card glass-card glass-card-hover p-6 sm:p-8 rounded-2xl grid sm:grid-cols-12 gap-6" data-reveal data-delay="{{ 60 }}">
+            <div class="sm:col-span-2 flex sm:flex-col items-center sm:items-start gap-3">
+                <span class="step-num text-5xl font-black {{ 'text-green-400' if green else 'text-cyan-400' }}">{{ s.n }}</span>
+                <span class="px-2.5 py-1 rounded {{ 'bg-green-500/10 text-green-300' if green else 'bg-cyan-500/10 text-cyan-300' }} text-[10px] font-bold uppercase">Phase {{ s.phase }}</span>
+            </div>
+            <div class="sm:col-span-10">
+                <h2 class="text-xl font-bold text-white mb-2">{{ s.title }}</h2>
+                <p class="text-sm text-egc-muted leading-relaxed mb-5">{{ s.text }}</p>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="text-xs uppercase tracking-widest font-bold {{ 'text-green-400' if green else 'text-cyan-400' }} mb-2">Ce que nous faisons</h3>
+                        <ul class="space-y-2 text-xs text-egc-muted">{% for a in d.actions %}<li class="flex items-start gap-2"><i class="fa-solid fa-check mt-0.5 {{ 'text-green-400' if green else 'text-cyan-400' }}"></i> {{ a }}</li>{% endfor %}</ul>
+                    </div>
+                    <div>
+                        <h3 class="text-xs uppercase tracking-widest font-bold text-amber-400 mb-2">Livrables</h3>
+                        <ul class="space-y-2 text-xs text-egc-muted">{% for l in d.livrables %}<li class="flex items-start gap-2"><i class="fa-solid fa-file-lines text-amber-400 mt-0.5"></i> {{ l }}</li>{% endfor %}</ul>
+                    </div>
+                </div>
+            </div>
+            <span class="step-line {{ 'bg-green-400' if green else 'bg-cyan-400' }}"></span>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="py-16 bg-egc-dark/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {{ section_head("Collaboration", "Une méthode pensée pour vous simplifier la vie") }}
+        <div class="grid md:grid-cols-3 gap-6">
+            {% for c in collab %}
+            <div class="glass-card glass-card-hover p-6 rounded-2xl text-center" data-reveal data-delay="{{ loop.index0 * 120 }}">
+                <i class="fa-solid {{ c.icon }} text-3xl text-cyan-400 mb-4"></i>
+                <h3 class="text-white font-bold mb-2">{{ c.title }}</h3>
+                <p class="text-xs text-egc-muted leading-relaxed">{{ c.text }}</p>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="mt-10 glass-card p-8 rounded-2xl text-center" data-reveal>
+            <h3 class="text-lg font-bold text-white mb-1">Outils de conception &amp; référentiels</h3>
+            <p class="text-xs text-egc-muted mb-5">Application des normes sénégalaises et européennes (dont NF C 15-100).</p>
+            <div class="flex flex-wrap gap-2 justify-center">
+                {% for t in tools %}<span class="tool-chip px-3 py-1.5 rounded-lg bg-white/10 text-cyan-300 font-semibold text-xs border border-white/10">{{ t }}</span>{% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+{% set cta_title = "Démarrons par une première phase" %}
+{% include 'partials/_cta_devis.html' %}
+{% endblock %}

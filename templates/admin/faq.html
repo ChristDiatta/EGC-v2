@@ -1,0 +1,38 @@
+{% extends 'admin/base.html' %}
+{% from 'admin/_ui.html' import csrf, field, page_title, post_btn, move_btns with context %}
+{% block title %}FAQ{% endblock %}
+{% block content %}
+{{ page_title("Questions fréquentes", "Affichées en bas de la page Contact.") }}
+
+<form method="post" action="{{ url_for('admin.faq_add') }}" class="card p-5 mb-6 space-y-4">
+    {{ csrf() }}
+    <h2 class="font-bold"><i class="fa-solid fa-plus text-cyan-600 mr-2"></i>Ajouter une question</h2>
+    {{ field('Question', 'question', '', true, maxlength=200) }}
+    <label class="block"><span class="text-sm font-semibold text-slate-700">Réponse <span class="text-red-500">*</span></span>
+        <textarea class="inp mt-1" name="answer" maxlength="1200" required></textarea></label>
+    <button class="btn btn-primary" type="submit"><i class="fa-solid fa-plus"></i> Ajouter</button>
+</form>
+
+<div class="space-y-4">
+    {% for r in rows %}
+    <div class="card p-4 flex flex-wrap gap-4 items-start {{ 'opacity-60' if not r.visible }}">
+        <form method="post" action="{{ url_for('admin.faq_save', fid=r.id) }}" class="flex-1 min-w-[16rem] space-y-3">
+            {{ csrf() }}
+            {{ field('Question', 'question', r.question, true, maxlength=200) }}
+            <label class="block"><span class="text-sm font-semibold text-slate-700">Réponse</span>
+                <textarea class="inp mt-1" name="answer" maxlength="1200" required>{{ r.answer }}</textarea></label>
+            <div class="flex items-center justify-between">
+                <label class="flex items-center gap-2 text-sm font-semibold"><input type="checkbox" name="visible" value="1" {{ 'checked' if r.visible }}> Visible</label>
+                <button class="btn btn-primary" type="submit"><i class="fa-solid fa-floppy-disk"></i> Enregistrer</button>
+            </div>
+        </form>
+        <div class="flex gap-1.5">
+            {{ move_btns(url_for('admin.faq_move', fid=r.id)) }}
+            {{ post_btn(url_for('admin.faq_delete', fid=r.id), '', 'fa-trash', 'btn-danger', 'Supprimer cette question ?', title='Supprimer') }}
+        </div>
+    </div>
+    {% else %}
+    <p class="card p-8 text-center text-sm text-slate-500">Aucune question pour le moment.</p>
+    {% endfor %}
+</div>
+{% endblock %}

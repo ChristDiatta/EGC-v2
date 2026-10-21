@@ -1,0 +1,44 @@
+<!-- Formulaire de Contact / Devis -->
+<section id="contact" class="py-20 relative bg-egc-dark">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <div class="grid lg:grid-cols-12 gap-12">
+
+            <!-- Contact Info Panel -->
+            <div class="lg:col-span-5 space-y-8">
+                <div data-reveal="left">
+                    <h2 class="text-xs uppercase font-bold tracking-widest text-cyan-400 mb-2">Parlons de Votre Projet</h2>
+                    <p class="text-3xl font-extrabold text-white">Vous avez un projet d'études ?</p>
+                    <p class="text-egc-muted text-sm mt-3">
+                        Envoyez-nous vos plans ou votre cahier des charges. Nos ingénieurs vous répondront avec une proposition adaptée à vos besoins.
+                    </p>
+                </div>
+
+                <div class="space-y-6">
+                    {% for c in contact_items %}
+                    <div class="contact-item flex items-center gap-4 glass-card p-4 rounded-xl" data-reveal="left" data-delay="{{ 100 + loop.index0 * 100 }}">
+                        <div class="w-12 h-12 rounded-lg {{ c.box }} border flex items-center justify-center text-xl shrink-0">
+                            <i class="fa-solid {{ c.icon }}"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-egc-muted">{{ c.label }}</p>
+                            {% if c.href %}
+                            <a href="{{ c.href }}"{% if c.href.startswith('http') %} target="_blank" rel="noopener"{% endif %} class="text-sm font-bold text-white {{ c.hover }} transition-colors">{{ c.value }}</a>
+                            {% else %}
+                            <p class="text-sm font-bold text-white">{{ c.value }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Contact Interactive Form -->
+            <div class="lg:col-span-7" data-reveal="right" data-delay="150">
+                {% include 'partials/_quote_form.html' %}
+            </div>
+
+        </div>
+
+    </div>
+</section>

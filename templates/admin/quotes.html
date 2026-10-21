@@ -1,0 +1,49 @@
+{% extends 'admin/base.html' %}
+{% from 'admin/_ui.html' import page_title with context %}
+{% block title %}Demandes de devis{% endblock %}
+{% block content %}
+{{ page_title("Demandes de devis", total ~ " demande" ~ ("s" if total > 1 else "") ~ (" trouvée" ~ ("s" if total > 1 else "") if q or statut else " au total")) }}
+
+<form method="get" class="card p-4 mb-5 flex flex-wrap gap-3 items-end">
+    <label class="flex-1 min-w-[12rem]"><span class="text-xs font-semibold text-slate-600">Recherche</span>
+        <input class="inp mt-1" type="search" name="q" value="{{ q }}" placeholder="Nom, société, e-mail, téléphone, message…"></label>
+    <label><span class="text-xs font-semibold text-slate-600">Statut</span>
+        <select class="inp mt-1" name="statut">
+            <option value="">Tous</option>
+            {% for k, (label, _) in statuses.items() %}<option value="{{ k }}" {{ 'selected' if k == statut }}>{{ label }}</option>{% endfor %}
+        </select></label>
+    <button class="btn btn-primary" type="submit"><i class="fa-solid fa-magnifying-glass"></i> Filtrer</button>
+    <a class="btn" href="{{ url_for('admin.quotes_export', **args) }}"><i class="fa-solid fa-file-csv"></i> Exporter (CSV)</a>
+</form>
+
+<div class="card overflow-hidden">
+    {% if rows %}
+    <div class="overflow-x-auto">
+    <table class="w-full text-sm">
+        <thead class="bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
+            <tr><th class="text-left px-4 py-3">Date</th><th class="text-left px-4 py-3">Contact</th><th class="text-left px-4 py-3">Lots</th><th class="text-left px-4 py-3">Statut</th><th class="px-4 py-3"></th></tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+            {% for r in rows %}
+            <tr class="hover:bg-slate-50 {{ 'font-semibold' if r.status == 'nouveau' }}">
+                <td class="px-4 py-3 whitespace-nowrap text-slate-500">{{ r.created_at[:16]|replace('T', ' ') }}</td>
+                <td class="px-4 py-3"><span class="block">{{ r.name }}</span><span class="block text-xs font-normal text-slate-500">{{ r.company or r.email }}</span></td>
+                <td class="px-4 py-3 text-xs font-normal text-slate-600">{% for l in r.lots.split(',') if l %}{{ lot_labels.get(l, l) }}{{ ', ' if not loop.last }}{% endfor %}</td>
+                <td class="px-4 py-3"><span class="px-2.5 py-1 rounded-full text-[11px] font-bold {{ statuses[r.status][1] }}">{{ statuses[r.status][0] }}</span></td>
+                <td class="px-4 py-3 text-right"><a class="btn" href="{{ url_for('admin.quote_detail', qid=r.id) }}">Ouvrir</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+    {% else %}<p class="px-5 py-10 text-center text-slate-500 text-sm">Aucune demande ne correspond.</p>{% endif %}
+</div>
+
+{% if pages > 1 %}
+<nav class="flex items-center justify-center gap-3 mt-5 text-sm" aria-label="Pagination">
+    {% if page > 1 %}<a class="btn" href="{{ url_for('admin.quotes', page=page-1, **args) }}"><i class="fa-solid fa-chevron-left"></i> Précédent</a>{% endif %}
+    <span class="text-slate-500">Page {{ page }} / {{ pages }}</span>
+    {% if page < pages %}<a class="btn" href="{{ url_for('admin.quotes', page=page+1, **args) }}">Suivant <i class="fa-solid fa-chevron-right"></i></a>{% endif %}
+</nav>
+{% endif %}
+{% endblock %}

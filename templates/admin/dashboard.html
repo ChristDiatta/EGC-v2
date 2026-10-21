@@ -1,0 +1,40 @@
+{% extends 'admin/base.html' %}
+{% from 'admin/_ui.html' import page_title with context %}
+{% block title %}Tableau de bord{% endblock %}
+{% block content %}
+{{ page_title("Tableau de bord", "Bonjour " ~ session.get('admin_name') ~ ", voici l'état de votre site.") }}
+
+<div class="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+    {% set cards = [
+        ('Nouvelles demandes', stats.nouveau, 'fa-bell', 'text-amber-600 bg-amber-50', url_for('admin.quotes', statut='nouveau')),
+        ('Demandes de devis', stats.devis, 'fa-file-signature', 'text-cyan-600 bg-cyan-50', url_for('admin.quotes')),
+        ('Projets publiés', stats.projets, 'fa-images', 'text-green-600 bg-green-50', url_for('admin.projects')),
+        ('Partenaires', stats.partenaires, 'fa-handshake', 'text-blue-600 bg-blue-50', url_for('admin.partners')),
+        ('Questions FAQ', stats.faq, 'fa-circle-question', 'text-purple-600 bg-purple-50', url_for('admin.faq'))] %}
+    {% for label, n, icon, cls, url in cards %}
+    <a href="{{ url }}" class="card p-4 hover:shadow-md transition-shadow">
+        <span class="w-10 h-10 rounded-xl {{ cls }} flex items-center justify-center mb-3"><i class="fa-solid {{ icon }}"></i></span>
+        <span class="block text-2xl font-extrabold">{{ n }}</span>
+        <span class="block text-xs text-slate-500 font-semibold">{{ label }}</span>
+    </a>
+    {% endfor %}
+</div>
+
+<div class="card">
+    <div class="flex items-center justify-between px-5 py-4 border-b border-slate-100">
+        <h2 class="font-bold">Dernières demandes de devis</h2>
+        <a href="{{ url_for('admin.quotes') }}" class="text-sm font-semibold text-cyan-700 hover:underline">Tout voir</a>
+    </div>
+    {% if latest %}
+    <ul class="divide-y divide-slate-100">
+        {% for r in latest %}
+        <li><a href="{{ url_for('admin.quote_detail', qid=r.id) }}" class="flex items-center gap-4 px-5 py-3 hover:bg-slate-50">
+            <span class="flex-1 min-w-0"><span class="block font-semibold truncate">{{ r.name }}{% if r.company %} <span class="text-slate-400 font-normal">· {{ r.company }}</span>{% endif %}</span>
+                <span class="block text-xs text-slate-500 truncate">{{ r.created_at[:16]|replace('T', ' ') }}</span></span>
+            <span class="px-2.5 py-1 rounded-full text-[11px] font-bold {{ statuses[r.status][1] }}">{{ statuses[r.status][0] }}</span>
+        </a></li>
+        {% endfor %}
+    </ul>
+    {% else %}<p class="px-5 py-8 text-sm text-slate-500 text-center">Aucune demande pour le moment.</p>{% endif %}
+</div>
+{% endblock %}
